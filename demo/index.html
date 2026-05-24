@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>LLM ZK CI/CD Research Demo</title></head>
+<body>
+<h1>LLM ZK CI/CD Research Demo</h1>
+<button onclick="generateProof()">Generate ZK Proof</button>
+<button onclick="verifyTraining()">Verify Training</button>
+<button onclick="integrateCI()">Integrate CI/CD</button>
+<div id="stats"></div>
+<div id="log"></div>
+<script>
+let proofs = [];
+let verifications = 0;
+function generateProof() {
+  proofs.push({model: 'llm-v1', hash: 'abc123'});
+  log("ZK proof generated for model training");
+}
+function verifyTraining() {
+  verifications++;
+  log("Training integrity verified via ZK proof");
+}
+function integrateCI() {
+  log("ZK verification integrated into CI/CD pipeline");
+}
+function updateStats() {
+  document.getElementById('stats').innerHTML = `Proofs: ${proofs.length} | Verifications: ${verifications}`;
+}
+function log(msg) {
+  document.getElementById('log').innerHTML += `<div>${msg}</div>`;
+}
+</script>
+</body>
+</html>

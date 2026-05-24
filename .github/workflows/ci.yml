@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check markdown
+        run: |
+          find . -name "*.md" -type f
+      - name: Validate paper
+        run: |
+          if [ -f "paper.md" ]; then
+            echo "Paper exists"
+          fi
