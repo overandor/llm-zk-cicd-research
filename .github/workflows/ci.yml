@@ -19,3 +19,53 @@ jobs:
           if [ -f "paper.md" ]; then
             echo "Paper exists"
           fi
+
+  second-brain-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run second-brain unit tests
+        run: python -m unittest discover -s second_brain/tests -v
+
+      - name: Build offline index (no Ollama required)
+        run: python second_brain/second_brain.py second_brain/notes --offline -o second_brain/index.json
+
+      - name: Show generated index
+        run: cat second_brain/index.json
+
+  second-brain-ollama-inference:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Ollama
+        run: curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama server
+        run: |
+          ollama serve &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:11434/api/tags > /dev/null && break
+            sleep 1
+          done
+
+      - name: Pull model
+        run: ollama pull llama3.2:1b
+
+      - name: Build index with local Ollama inference
+        run: python second_brain/second_brain.py second_brain/notes --model llama3.2:1b -o second_brain/index.ollama.json
+
+      - name: Show generated index
+        run: cat second_brain/index.ollama.json
