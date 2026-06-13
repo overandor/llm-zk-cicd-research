@@ -1,0 +1,6 @@
+# Generated second-brain indexes
+second_brain/index.json
+second_brain/index.*.json
+
+__pycache__/
+*.pyc
